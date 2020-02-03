@@ -1,0 +1,31 @@
+import React from 'react';
+import { StyleSheet, View, Text, Image } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
+const styles = StyleSheet.create({
+    logo: {
+        width: "100%",
+        height: 150,
+        marginTop: 20
+    },
+    viewForm: {
+        marginRight: 40,
+        marginLeft: 40
+    }
+});
+
+const Register = () => (
+    <KeyboardAwareScrollView>
+        <Image
+            source={require("../../../assets/img/five-forks.png")}
+            style={styles.logo}
+            resizeMode="contain"
+        />
+        <View style={styles.viewForm}>
+            <Text>Formulario de registro</Text>
+        </View>
+    </KeyboardAwareScrollView>
+);
+
+
+export default Register;
