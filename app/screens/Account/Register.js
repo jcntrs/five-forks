@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import RegisterForm from '../../components/account/RegisterForm';
 
 const styles = StyleSheet.create({
     logo: {
@@ -22,7 +23,7 @@ const Register = () => (
             resizeMode="contain"
         />
         <View style={styles.viewForm}>
-            <Text>Formulario de registro</Text>
+            <RegisterForm />
         </View>
     </KeyboardAwareScrollView>
 );

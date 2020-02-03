@@ -1,7 +1,7 @@
 import { createStackNavigator } from 'react-navigation-stack';
-import MyAccount from '../screens/Account/MyAccount';
-import Login from '../screens/Account/Login';
-import Register from '../screens/Account/Register';
+import MyAccount from '../screens/account/MyAccount';
+import Login from '../screens/account/Login';
+import Register from '../screens/account/Register';
 
 const AccountScreenStacks = createStackNavigator({
     MyAccount: {
