@@ -1,79 +1,84 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Input, Icon, Button } from 'react-native-elements';
 
 const styles = StyleSheet.create({
     formContainer: {
         flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
+        alignItems: 'center',
+        justifyContent: 'center',
         marginTop: 30
     },
     inputForm: {
-        width: "100%",
+        width: '100%',
         marginTop: 20
     },
     iconRight: {
-        color: "#c1c1c1"
+        color: '#c1c1c1'
     },
     btnContainerRegister: {
         marginTop: 20,
-        width: "95%"
+        width: '95%'
     },
     btnRegister: {
-        backgroundColor: "#00a680"
+        backgroundColor: '#00a680'
     }
 });
 
 const RegisterForm = () => {
 
+    const [hidePassword, setHidePassword] = useState(true);
+    const [hideRepeatPassword, setHideRepeatPassword] = useState(true)
+
     const register = () => {
         console.log('Usuario registrado')
     }
 
-    return (  
+    return (
         <View style={styles.formContainer}>
-            <Input 
+            <Input
                 placeholder="Correo electronico"
                 containerStyle={styles.inputForm}
                 onChange={() => console.log('change email')}
                 rightIcon={
-                    <Icon 
+                    <Icon
                         type="material-community"
                         name="at"
                         iconStyle={styles.iconRight}
                     />
                 }
             />
-            <Input 
+            <Input
                 placeholder="Contraseña"
                 password={true}
-                secureTextEntry={true}
+                secureTextEntry={hidePassword}
                 containerStyle={styles.inputForm}
                 onChange={() => console.log('change password 1')}
                 rightIcon={
-                    <Icon 
+                    <Icon
                         type="material-community"
-                        name="eye-outline"
+                        name={hidePassword ? 'eye-outline' : 'eye-off-outline'}
                         iconStyle={styles.iconRight}
+                        onPress={() => setHidePassword(!hidePassword)}
                     />
                 }
             />
-            <Input 
+            <Input
                 placeholder="Repetir contraseña"
                 password={true}
-                secureTextEntry={true}
+                secureTextEntry={hideRepeatPassword}
                 containerStyle={styles.inputForm}
                 onChange={() => console.log('change password 2')}
                 rightIcon={
-                    <Icon 
+                    <Icon
                         type="material-community"
-                        name="eye-outline"
+                        name={hideRepeatPassword ? 'eye-outline' : 'eye-off-outline'}
                         iconStyle={styles.iconRight}
+                        onPress={() => setHideRepeatPassword(!hideRepeatPassword)}
                     />
                 }
             />
-            <Button 
+            <Button
                 title="Registrarse"
                 containerStyle={styles.btnContainerRegister}
                 buttonStyle={styles.btnRegister}
@@ -81,7 +86,7 @@ const RegisterForm = () => {
             />
         </View>
     );
-    
+
 }
- 
+
 export default RegisterForm;
