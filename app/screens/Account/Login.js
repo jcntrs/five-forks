@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { StyleSheet, ScrollView, View, Text, Image } from 'react-native';
 import { Divider } from 'react-native-elements';
+import LoginForm from '../../components/account/LoginForm';
+import Toast from 'react-native-easy-toast';
 
 const styles = StyleSheet.create({
     logo: {
@@ -24,11 +26,16 @@ const styles = StyleSheet.create({
     btnRegister: {
         color: "#00a680",
         fontWeight: "bold"
+    },
+    viewCenter: {
+        alignItems: 'center'
     }
+
 });
 
 const Login = props => {
 
+    const toastRef = useRef();
     const { navigation } = props;
 
     return (
@@ -39,20 +46,21 @@ const Login = props => {
                 resizeMode="contain"
             />
             <View style={styles.viewContainer}>
-                <Text>Formulario</Text>
+                <LoginForm toastRef={toastRef} />
                 <CreateAccount navigation={navigation} />
             </View>
             <Divider style={styles.divider} />
             <View style={styles.viewContainer}>
                 <Text>Login Facebook</Text>
             </View>
+            <Toast ref={toastRef} position="top" opacity={0.7} />
         </ScrollView>
     );
 
 }
 
 const CreateAccount = ({ navigation }) => (
-    <View>
+    <View style={styles.viewCenter}>
         <Text style={styles.textRegister}>¿Aún no tienes una cuenta?</Text>
         <Text style={styles.btnRegister} onPress={() => navigation.navigate('Register')}>Registrate</Text>
     </View>
