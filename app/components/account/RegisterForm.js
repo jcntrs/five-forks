@@ -3,6 +3,8 @@ import { StyleSheet, View } from 'react-native';
 import { Input, Icon, Button } from 'react-native-elements';
 import { validateEmail } from '../../utils/Validation';
 import * as firebase from 'firebase';
+import Loading from '../Loading';
+import { withNavigation } from 'react-navigation';
 
 const styles = StyleSheet.create({
     formContainer: {
@@ -27,31 +29,46 @@ const styles = StyleSheet.create({
     }
 });
 
-const RegisterForm = () => {
+const RegisterForm = ({ toastRef, navigation }) => {
 
     const [hidePassword, setHidePassword] = useState(true);
     const [hideRepeatPassword, setHideRepeatPassword] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
+    const [creatingAccount, setCreatingAccount] = useState(false);
 
     const register = async () => {
 
+        setCreatingAccount(true);
         let error = false;
 
-        !validateEmail(email) ? error = true : null;
-        password.trim().length === 0 || repeatPassword.trim().length === 0 ? error = true : null;
-        password !== repeatPassword ? error = true : null;
+        if (!validateEmail(email)) {
+            error = true;
+            toastRef.current.show('El email no es válido', 2000);
+        } else if (password.trim().length < 6) {
+            error = true;
+            toastRef.current.show('La contraseña debe tener al menos 6 caracteres', 2000);
+        } else if (repeatPassword.trim().length < 6) {
+            error = true;
+            toastRef.current.show('La confirmación de contraseña debe tener al menos 6 caracteres', 2000);
+        } else if (password !== repeatPassword) {
+            error = true;
+            toastRef.current.show('Contraseñas no coinciden', 2000);
+        }
 
         if (!error) {
             await firebase.auth().createUserWithEmailAndPassword(email, password)
                 .then(() => {
-                    console.log('Usuario creado exitosamente');
+                    navigation.navigate('MyAccount');
                 })
                 .catch((error) => {
-                    console.log('Error al crear usaurio', error)
+                    console.log(error);
+                    toastRef.current.show('Error al crear usaurio', 2000);
                 });
         }
+
+        setCreatingAccount(false);
 
     }
 
@@ -105,9 +122,10 @@ const RegisterForm = () => {
                 buttonStyle={styles.btnRegister}
                 onPress={register}
             />
+            <Loading isVisible={creatingAccount} text="Creando cuenta" />
         </View>
     );
 
 }
 
-export default RegisterForm;
+export default withNavigation(RegisterForm);

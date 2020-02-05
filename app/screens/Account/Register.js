@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { StyleSheet, View, Text, Image } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import RegisterForm from '../../components/account/RegisterForm';
+import Toast from 'react-native-easy-toast';
 
 const styles = StyleSheet.create({
     logo: {
@@ -15,18 +16,25 @@ const styles = StyleSheet.create({
     }
 });
 
-const Register = () => (
-    <KeyboardAwareScrollView>
-        <Image
-            source={require("../../../assets/img/five-forks.png")}
-            style={styles.logo}
-            resizeMode="contain"
-        />
-        <View style={styles.viewForm}>
-            <RegisterForm />
-        </View>
-    </KeyboardAwareScrollView>
-);
+const Register = () => {
+
+    const toastRef = useRef();
+
+    return (
+        <KeyboardAwareScrollView enableOnAndroid extraScrollHeight={20}>
+            <Image
+                source={require("../../../assets/img/five-forks.png")}
+                style={styles.logo}
+                resizeMode="contain"
+            />
+            <View style={styles.viewForm}>
+                <RegisterForm toastRef={toastRef} />
+            </View>
+            <Toast ref={toastRef} position="top" opacity={0.7} />
+        </KeyboardAwareScrollView>
+    );
+
+}
 
 
 export default Register;
