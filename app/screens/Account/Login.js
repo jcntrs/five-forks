@@ -1,8 +1,10 @@
 import React, { useRef } from 'react';
-import { StyleSheet, ScrollView, View, Text, Image } from 'react-native';
+import { StyleSheet, View, Text, Image } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Divider } from 'react-native-elements';
 import LoginForm from '../../components/account/LoginForm';
 import Toast from 'react-native-easy-toast';
+import LoginFacebook from '../../components/account/LoginFacebook';
 
 const styles = StyleSheet.create({
     logo: {
@@ -16,7 +18,10 @@ const styles = StyleSheet.create({
     },
     divider: {
         backgroundColor: "#00a680",
-        margin: 40
+        marginTop: 25,
+        marginBottom: 25,
+        marginLeft: 45,
+        marginRight: 45
     },
     textRegister: {
         marginTop: 15,
@@ -39,7 +44,7 @@ const Login = props => {
     const { navigation } = props;
 
     return (
-        <ScrollView>
+        <KeyboardAwareScrollView enableOnAndroid>
             <Image
                 source={require("../../../assets/img/five-forks.png")}
                 style={styles.logo}
@@ -51,10 +56,10 @@ const Login = props => {
             </View>
             <Divider style={styles.divider} />
             <View style={styles.viewContainer}>
-                <Text>Login Facebook</Text>
+                <LoginFacebook toastRef={toastRef} navigation={navigation} />
             </View>
             <Toast ref={toastRef} position="top" opacity={0.7} />
-        </ScrollView>
+        </KeyboardAwareScrollView>
     );
 
 }
