@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Input, Icon, Button } from 'react-native-elements';
 import { validateEmail } from '../../utils/Validation';
+import * as firebase from 'firebase';
 import Loading from '../Loading';
+import { withNavigation } from 'react-navigation';
 
 const styles = StyleSheet.create({
     formContainer: {
@@ -27,14 +29,14 @@ const styles = StyleSheet.create({
     }
 });
 
-const LoginForm = ({ toastRef }) => {
+const LoginForm = ({ toastRef, navigation }) => {
 
     const [hidePassword, setHidePassword] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loggingIn, setLoggingIn] = useState(false);
 
-    const login = () => {
+    const login = async () => {
 
         setLoggingIn(true);
         let error = false;
@@ -48,7 +50,13 @@ const LoginForm = ({ toastRef }) => {
         }
 
         if (!error) {
-            console.log('Éxito');
+            await firebase.auth().signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    navigation.navigate('MyAccount');
+                })
+                .catch(() => {
+                    toastRef.current.show('Email o contraseña incorrecta', 2000);
+                });
         }
 
         setLoggingIn(false);
@@ -95,4 +103,4 @@ const LoginForm = ({ toastRef }) => {
 
 }
 
-export default LoginForm;
+export default withNavigation(LoginForm);
