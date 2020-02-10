@@ -30,35 +30,51 @@ const UserInfo = props => {
 
     YellowBox.ignoreWarnings(['Setting a timer']);
 
-    const { userInfo: { uid, displayName, email, photoURL } } = props;
+    const { userInfo: { uid, displayName, email, photoURL }, setReloadData, setIsLoading, setTextLoading, toastRef } = props;
 
     const editAvatar = async () => {
         const resultPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
         const resultPermissionCamera = resultPermission.permissions.cameraRoll.status;
         if (resultPermissionCamera === 'denied') {
-            console.log('Es necesario aceptar los permisos');
+            toastRef.current.show('Es necesario aceptar los permisos de la galeria', 2000);
         } else {
             const result = await ImagePicker.launchImageLibraryAsync({
                 allowsEditing: true,
                 aspect: [4, 3]
             });
-            console.log(result)
             if (result.cancelled) {
-                console.log('Has cerrado la galeria de imagenes');
+                toastRef.current.show('Has cerrado la galria de imágenes antes de seleccionar alguna', 2000);
             } else {
                 uploadImage(result.uri, uid).then(() => {
-                    console.log('Imagen subida correctamente');
+                    updatePhotoUrl(uid);
                 });
             }
         }
     }
 
     const uploadImage = async (uri, imageName) => {
+        setTextLoading('Actualizando Avatar');
+        setIsLoading(true);
         const response = await fetch(uri);
         const blob = await response.blob();
         const ref = firebase.storage().ref().child(`avatar/${imageName}`);
         return ref.put(blob);
         //console.log(JSON.stringify(blob));
+    }
+
+    const updatePhotoUrl = uid => {
+        firebase.storage().ref(`avatar/${uid}`).getDownloadURL()
+            .then(async result => {
+                const update = {
+                    photoURL: result
+                }
+                await firebase.auth().currentUser.updateProfile(update);
+                setReloadData(true);
+                setIsLoading(false);
+            })
+            .catch(() => {
+                toastRef.current.show('Error al recuperar el avatar del servidor', 2000);
+            });
     }
 
     return (
