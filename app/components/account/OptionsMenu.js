@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { ListItem } from 'react-native-elements';
+import Modal from '../Modal';
 
 const styles = StyleSheet.create({
     menuItem: {
@@ -11,6 +12,8 @@ const styles = StyleSheet.create({
 
 const OptionsMenu = () => {
 
+    const [isVisible, setIsVisible] = useState(false);
+
     const menuOptions = [{
         title: 'Cambiar Nombres y Apellidos',
         iconType: 'material-community',
@@ -18,7 +21,7 @@ const OptionsMenu = () => {
         iconColorLeft: '#ccc',
         iconNameRight: 'chevron-right',
         iconColorRight: '#ccc',
-        onPress: () => console.log('Change displayName')
+        onPress: () => selectedComponent()
     }, {
         title: 'Cambiar E-mail',
         iconType: 'material-community',
@@ -36,6 +39,10 @@ const OptionsMenu = () => {
         iconColorRight: '#ccc',
         onPress: () => console.log('Change password')
     }];
+
+    const selectedComponent = () => {
+        setIsVisible(true);
+    }
 
     return (
         <View>
@@ -57,6 +64,11 @@ const OptionsMenu = () => {
                     containerStyle={styles.menuItem}
                 />
             ))}
+            <Modal isVisible={isVisible} setIsVisible={setIsVisible}>
+                <View>
+                    <Text>Estoy dentro del modal</Text>
+                </View>
+            </Modal>
         </View>
     );
 
