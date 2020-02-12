@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import Modal from '../Modal';
+import ChangeNameForm from '../account/ChangeNameForm';
+import ChangeEmailForm from '../account/ChangeEmailForm';
+import ChangePasswordForm from '../account/ChangePasswordForm';
 
 const styles = StyleSheet.create({
     menuItem: {
@@ -10,9 +13,10 @@ const styles = StyleSheet.create({
     }
 });
 
-const OptionsMenu = () => {
+const OptionsMenu = ({ userInfo, setReloadData, toastRef }) => {
 
     const [isVisible, setIsVisible] = useState(false);
+    const [renderComponent, setRenderComponent] = useState(null);
 
     const menuOptions = [{
         title: 'Cambiar Nombres y Apellidos',
@@ -21,7 +25,7 @@ const OptionsMenu = () => {
         iconColorLeft: '#ccc',
         iconNameRight: 'chevron-right',
         iconColorRight: '#ccc',
-        onPress: () => selectedComponent()
+        onPress: () => selectedComponent('changeName')
     }, {
         title: 'Cambiar E-mail',
         iconType: 'material-community',
@@ -29,7 +33,7 @@ const OptionsMenu = () => {
         iconColorLeft: '#ccc',
         iconNameRight: 'chevron-right',
         iconColorRight: '#ccc',
-        onPress: () => console.log('Change e-mail')
+        onPress: () => selectedComponent('changeEmail')
     }, {
         title: 'Cambiar Contraseña',
         iconType: 'material-community',
@@ -37,10 +41,31 @@ const OptionsMenu = () => {
         iconColorLeft: '#ccc',
         iconNameRight: 'chevron-right',
         iconColorRight: '#ccc',
-        onPress: () => console.log('Change password')
+        onPress: () => selectedComponent('changePassword')
     }];
 
-    const selectedComponent = () => {
+    const selectedComponent = type => {
+        switch (type) {
+            case 'changeName':
+                setRenderComponent(
+                    <ChangeNameForm
+                        displayName={userInfo.displayName}
+                        setIsVisible={setIsVisible}
+                        setReloadData={setReloadData}
+                        toastRef={toastRef}
+                    />
+                );
+                break;
+            case 'changeEmail':
+                setRenderComponent(<ChangeEmailForm />);
+                break;
+            case 'changePassword':
+                setRenderComponent(<ChangePasswordForm />);
+                break;
+
+            default:
+                break;
+        }
         setIsVisible(true);
     }
 
@@ -64,11 +89,11 @@ const OptionsMenu = () => {
                     containerStyle={styles.menuItem}
                 />
             ))}
-            <Modal isVisible={isVisible} setIsVisible={setIsVisible}>
-                <View>
-                    <Text>Estoy dentro del modal</Text>
-                </View>
-            </Modal>
+            {renderComponent && (
+                <Modal isVisible={isVisible} setIsVisible={setIsVisible}>
+                    {renderComponent}
+                </Modal>
+            )}
         </View>
     );
 

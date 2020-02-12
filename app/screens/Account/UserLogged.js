@@ -51,7 +51,11 @@ const UserLogged = () => {
                 setTextLoading={setTextLoading}
                 toastRef={toastRef}
             />
-            <OptionsMenu />
+            <OptionsMenu
+                userInfo={userInfo}
+                setReloadData={setReloadData}
+                toastRef={toastRef}
+            />
             <Button
                 title="Cerrar sesión"
                 buttonStyle={styles.btnCloseSession}
