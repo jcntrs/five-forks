@@ -13,7 +13,8 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     btnContainer: {
-        marginTop: 20
+        marginTop: 20,
+        width: '95%'
     },
     btn: {
         backgroundColor: '#00a680'
@@ -27,7 +28,26 @@ const ChangeNameForm = ({ displayName, setIsVisible, setReloadData, toastRef }) 
     const [isLoading, setIsLoading] = useState(false);
 
     const updateName = () => {
-        console.log('Nombre actualizado');
+        if (!newDisplayName) {
+            setError('El nombre del usuario no ha cambiado');
+        } else {
+            setError(null);
+            setIsLoading(true);
+            const update = {
+                displayName: newDisplayName
+            }
+            firebase.auth().currentUser.updateProfile(update)
+                .then(() => {
+                    setIsLoading(false);
+                    setReloadData(true);
+                    toastRef.current.show('Nombre actualizado corretamente');
+                    setIsVisible(false);
+                })
+                .catch(() => {
+                    setError('Error al actualizar el nombre');
+                    setIsLoading(false);
+                });
+        }
     }
 
     return (
@@ -36,20 +56,20 @@ const ChangeNameForm = ({ displayName, setIsVisible, setReloadData, toastRef }) 
                 containerStyle={styles.input}
                 placeholder="Nombre"
                 defaultValue={displayName && displayName}
-                //onChange={....}
+                onChange={event => setNewDisplayName(event.nativeEvent.text)}
                 rightIcon={{
                     type: 'material-community',
                     name: 'account-circle-outline',
                     color: '#c2c2c2'
                 }}
-            //errorMessage={}
+                errorMessage={error}
             />
             <Button
                 title="Cambiar nombre"
                 containerStyle={styles.btnContainer}
                 buttonStyle={styles.btn}
                 onPress={updateName}
-            //loading={}
+                loading={isLoading}
             />
         </View>
     );
