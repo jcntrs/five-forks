@@ -40,7 +40,7 @@ const ChangeNameForm = ({ displayName, setIsVisible, setReloadData, toastRef }) 
                 .then(() => {
                     setIsLoading(false);
                     setReloadData(true);
-                    toastRef.current.show('Nombre actualizado corretamente');
+                    toastRef.current.show('Nombre actualizado corretamente', 2000);
                     setIsVisible(false);
                 })
                 .catch(() => {

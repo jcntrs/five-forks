@@ -57,7 +57,14 @@ const OptionsMenu = ({ userInfo, setReloadData, toastRef }) => {
                 );
                 break;
             case 'changeEmail':
-                setRenderComponent(<ChangeEmailForm />);
+                setRenderComponent(
+                    <ChangeEmailForm
+                        email={userInfo.email}
+                        setIsVisible={setIsVisible}
+                        setReloadData={setReloadData}
+                        toastRef={toastRef}
+                    />
+                );
                 break;
             case 'changePassword':
                 setRenderComponent(<ChangePasswordForm />);
