@@ -67,7 +67,12 @@ const OptionsMenu = ({ userInfo, setReloadData, toastRef }) => {
                 );
                 break;
             case 'changePassword':
-                setRenderComponent(<ChangePasswordForm />);
+                setRenderComponent(
+                    <ChangePasswordForm
+                        setIsVisible={setIsVisible}
+                        toastRef={toastRef}
+                    />
+                );
                 break;
 
             default:
