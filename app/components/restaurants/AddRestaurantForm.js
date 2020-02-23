@@ -4,6 +4,8 @@ import { Icon, Avatar, Image, Input, Button } from 'react-native-elements';
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 
+const widthScreen = Dimensions.get('window').width;
+
 const styles = StyleSheet.create({
     viewImage: {
         flexDirection: 'row',
@@ -23,6 +25,11 @@ const styles = StyleSheet.create({
         height: 70,
         width: 70,
         marginRight: 10
+    },
+    viewPhoto: {
+        alignItems: 'center',
+        height: 200,
+        marginBottom: 20
     }
 });
 
@@ -46,24 +53,41 @@ const UploadImage = ({ imagesSelected, setImagesSelected, toastRef }) => {
         }
     }
 
-    console.log(imagesSelected);
+    const removeImage = image => {
+        const arrayImages = imagesSelected;
+        Alert.alert(
+            'Eliminar Imagen',
+            '¿Estás seguro de eliminar la imagen?',
+            [
+                { text: 'Cancel', style: 'cancel' },
+                { text: 'Eliminar', onPress: () => setImagesSelected(arrayImages.filter(element => element !== image)) }
+            ],
+            { cancelable: false }
+        );
+    }
 
     return (
         <View style={styles.viewImage}>
-            <Icon
-                type="material-community"
-                name="camera"
-                color="#7a7a7a"
-                containerStyle={styles.containerIcon}
-                onPress={imageSelect}
-            />
-            <Avatar
-                style={styles.miniature}
-                onPress={() => console.log('Eliminando Imagen')}
-            />
+            {imagesSelected.length < 4 && (
+                <Icon
+                    type="material-community"
+                    name="camera"
+                    color="#7a7a7a"
+                    containerStyle={styles.containerIcon}
+                    onPress={imageSelect}
+                />
+            )}
+            {imagesSelected.map((element, index) => (
+                <Avatar
+                    key={index}
+                    style={styles.miniature}
+                    source={{ uri: element }}
+                    onPress={() => removeImage(element)}
+                />
+            ))}
         </View>
     );
-    
+
 }
 
 const AddRestaurantForm = ({ toastRef, setIsLoading, navigation }) => {
@@ -72,6 +96,7 @@ const AddRestaurantForm = ({ toastRef, setIsLoading, navigation }) => {
 
     return (
         <ScrollView>
+            <RestaurantImage imagesSelected={imagesSelected[0]} />
             <UploadImage
                 imagesSelected={imagesSelected}
                 setImagesSelected={setImagesSelected}
@@ -81,5 +106,16 @@ const AddRestaurantForm = ({ toastRef, setIsLoading, navigation }) => {
     );
 
 }
+
+const RestaurantImage = ({ imagesSelected }) => (
+    <View style={styles.viewPhoto}>
+        {imagesSelected ?
+            <Image source={{ uri: imagesSelected }} style={{ width: widthScreen, height: 200 }} />
+            :
+            <Image source={require('../../../assets/img/no-image.png')} style={{ width: widthScreen, height: 200 }} />
+        }
+    </View>
+);
+
 
 export default AddRestaurantForm;
