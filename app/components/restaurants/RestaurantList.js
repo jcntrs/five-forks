@@ -30,6 +30,15 @@ const styles = StyleSheet.create({
         paddingTop: 2,
         color: 'grey',
         width: 300
+    },
+    loaderRestaurants: {
+        marginTop: 10,
+        marginBottom: 10
+    },
+    notFoundRestaurants: {
+        marginTop: 10,
+        marginBottom: 20,
+        alignItems: 'center'
     }
 });
 
@@ -67,8 +76,23 @@ const Restaurant = props => {
 
 }
 
-const RestaurantList = ({ restaurants, isLoading }) => {
+const FooterList = ({ isLoading }) => {
+    return (
+        <View>
+            {isLoading ?
+                <View style={styles.loadingRestaurants}>
+                    <ActivityIndicator size="large" />
+                </View>
+                :
+                <View style={styles.notFoundRestaurants}>
+                    <Text>No quedan restaurantes por cargar</Text>
+                </View>
+            }
+        </View>
+    );
+}
 
+const RestaurantList = ({ restaurants, isLoading, handleLoadMore }) => {
     return (
         <View>
             {restaurants ?
@@ -76,19 +100,18 @@ const RestaurantList = ({ restaurants, isLoading }) => {
                     data={restaurants}
                     renderItem={element => <Restaurant restaurant={element} />}
                     keyExtractor={(item, index) => index.toString()}
-                    //onEndReached={}
-                    onEndReachedThreshold={0}
-                //ListFooterComponent={}
+                    onEndReached={handleLoadMore}
+                    onEndReachedThreshold={0.5}
+                    ListFooterComponent={<FooterList isLoading={isLoading} />}
                 />
                 :
-                <View style={Stylesheet.loadingRestaurants}>
+                <View style={Stylesheet.loaderRestaurants}>
                     <ActivityIndicator size="large" />
                     <Text>Cargando restaurantes</Text>
                 </View>
             }
         </View>
     );
-
 }
 
 export default RestaurantList;

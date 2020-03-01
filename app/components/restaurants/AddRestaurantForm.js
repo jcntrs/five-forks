@@ -242,7 +242,7 @@ const Map = ({ mapIsVisible, setMapIsVisible, setLocationRestaurant, toastRef })
 
 }
 
-const AddRestaurantForm = ({ toastRef, setIsLoading, navigation }) => {
+const AddRestaurantForm = ({ toastRef, setIsLoading, navigation, setIsReloadRestaurant }) => {
 
     const [imagesSelected, setImagesSelected] = useState([]);
     const [restaurantName, setRestaurantName] = useState('');
@@ -274,6 +274,7 @@ const AddRestaurantForm = ({ toastRef, setIsLoading, navigation }) => {
                     createdBy: firebaseApp.auth().currentUser.uid
                 }).then(() => {
                     setIsLoading(false);
+                    setIsReloadRestaurant(true);
                     navigation.navigate('Restaurants');
                 }).catch(() => {
                     setIsLoading(false);

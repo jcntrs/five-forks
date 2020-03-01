@@ -14,11 +14,11 @@ const styles = StyleSheet.create({
     }
 });
 
-const AddRestaurantButton = ({ navigation }) => {
+const AddRestaurantButton = ({ navigation, setIsReloadRestaurant }) => {
     return (
         <ActionButton
             buttonColor="#00a680"
-            onPress={() => navigation.navigate('AddRestaurant')}
+            onPress={() => navigation.navigate('AddRestaurant', { setIsReloadRestaurant })}
         />
     );
 }
@@ -30,6 +30,7 @@ const Restaurants = ({ navigation }) => {
     const [startRestaurants, setStartRestaurants] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [totalRestaurants, setTotalRestaurants] = useState(0);
+    const [isReloadRestaurant, setIsReloadRestaurant] = useState(false);
     const limitRestaurants = 8;
 
     useEffect(() => {
@@ -55,12 +56,32 @@ const Restaurants = ({ navigation }) => {
                 setRestaurants(resultRestaurants);
             });
         })();
-    }, []);
+        setIsReloadRestaurant(false);
+    }, [isReloadRestaurant]);
+
+    const handleLoadMore = async () => {
+        const resultRestaurants = [];
+        restaurants.length < totalRestaurants && setIsLoading(true);
+        const restaurantsDB = db.collection('restaurants').orderBy('created', 'desc').startAfter(startRestaurants.data().created).limit(limitRestaurants);
+        await restaurantsDB.get().then(response => {
+            if (response.docs.length > 0) {
+                setStartRestaurants(response.docs[response.docs.length - 1]);
+            } else {
+                setIsLoading(false);
+            }
+            response.forEach(doc => {
+                let restaurant = doc.data();
+                restaurant.id = doc.id;
+                resultRestaurants.push({ restaurant });
+            });
+            setRestaurants([...restaurants, ...resultRestaurants]);
+        })
+    }
 
     return (
         <View style={styles.viewBody}>
-            <RestaurantList restaurants={restaurants} isLoading={isLoading} />
-            {user && <AddRestaurantButton navigation={navigation} />}
+            <RestaurantList restaurants={restaurants} isLoading={isLoading} handleLoadMore={handleLoadMore} />
+            {user && <AddRestaurantButton navigation={navigation} setIsReloadRestaurant={setIsReloadRestaurant} />}
         </View>
     );
 
