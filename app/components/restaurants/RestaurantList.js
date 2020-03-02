@@ -44,7 +44,8 @@ const styles = StyleSheet.create({
 
 const Restaurant = props => {
 
-    const { name, address, description, images } = props.restaurant.item.restaurant;
+    const { restaurant, navigation } = props;
+    const { name, address, description, images } = restaurant.item.restaurant;
     const [imageURI, setImageURI] = useState(null);
 
     useEffect(() => {
@@ -55,7 +56,7 @@ const Restaurant = props => {
     });
 
     return (
-        <TouchableOpacity onPress={() => console.log('Ir al restaurante')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Restaurant', { restaurant })}>
             <View style={styles.viewRestaurant}>
                 <View style={styles.viewRestaurantImage}>
                     <Image
@@ -68,7 +69,7 @@ const Restaurant = props => {
                 <View>
                     <Text style={styles.restaurantName}>{name}</Text>
                     <Text style={styles.restaurantAddress}>{address}</Text>
-                    <Text style={styles.restaurantDescription}>{address.substr(0, 60)}...</Text>
+                    <Text style={styles.restaurantDescription}>{description.substr(0, 60)}...</Text>
                 </View>
             </View>
         </TouchableOpacity>
@@ -92,13 +93,13 @@ const FooterList = ({ isLoading }) => {
     );
 }
 
-const RestaurantList = ({ restaurants, isLoading, handleLoadMore }) => {
+const RestaurantList = ({ restaurants, isLoading, handleLoadMore, navigation }) => {
     return (
         <View>
             {restaurants ?
                 <FlatList
                     data={restaurants}
-                    renderItem={element => <Restaurant restaurant={element} />}
+                    renderItem={element => <Restaurant restaurant={element} navigation={navigation} />}
                     keyExtractor={(item, index) => index.toString()}
                     onEndReached={handleLoadMore}
                     onEndReachedThreshold={0.5}

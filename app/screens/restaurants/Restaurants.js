@@ -80,7 +80,12 @@ const Restaurants = ({ navigation }) => {
 
     return (
         <View style={styles.viewBody}>
-            <RestaurantList restaurants={restaurants} isLoading={isLoading} handleLoadMore={handleLoadMore} />
+            <RestaurantList
+                restaurants={restaurants}
+                isLoading={isLoading}
+                handleLoadMore={handleLoadMore}
+                navigation={navigation}
+            />
             {user && <AddRestaurantButton navigation={navigation} setIsReloadRestaurant={setIsReloadRestaurant} />}
         </View>
     );
